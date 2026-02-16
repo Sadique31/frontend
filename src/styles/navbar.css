@@ -1,0 +1,154 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  background: linear-gradient(135deg, #2b0000, #140000);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  position: relative;
+  z-index: 1000;
+}
+
+/* ================= LOGO ================= */
+.logo {
+  font-family: 'Cinzel', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: #facc15;
+  cursor: pointer;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.logo span {
+  display: block;
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 3px;
+  color: #ffffff;
+  margin-top: 4px;
+}
+
+/* Shimmer */
+.logo::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.4),
+    transparent
+  );
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    left: 100%;
+  }
+}
+
+/* ================= DESKTOP NAV ================= */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+}
+
+.nav-links li::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  background: #facc15;
+  left: 0;
+  bottom: -6px;
+  transition: 0.3s;
+}
+
+.nav-links li:hover::after {
+  width: 100%;
+}
+
+.nav-links li:hover {
+  color: #facc15;
+}
+
+/* ================= HAMBURGER ================= */
+.hamburger {
+  display: none;
+  font-size: 28px;
+  color: #facc15;
+  cursor: pointer;
+}
+
+/* ================= TABLET ================= */
+@media (max-width: 1024px) {
+
+  .navbar {
+    padding: 18px 30px;
+  }
+
+  .nav-links {
+    gap: 25px;
+  }
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  .hamburger {
+    display: block;
+  }
+
+  .nav-links {
+    position: fixed;              /* 🔥 FIXED instead of absolute */
+    top: 0;
+    right: -100%;                 /* Hidden by default */
+    height: 100vh;
+    width: 260px;
+    background: linear-gradient(135deg, #2b0000, #140000);
+    flex-direction: column;
+    padding-top: 100px;
+    gap: 30px;
+    transition: right 0.3s ease-in-out;
+    box-shadow: -5px 0 20px rgba(0,0,0,0.6);
+  }
+
+  .nav-links.active {
+    right: 0;                     /* Slide in */
+  }
+
+  .nav-links li {
+    padding-left: 30px;
+    font-size: 18px;
+  }
+
+  .navbar {
+    padding: 15px 20px;
+  }
+
+  .logo {
+    font-size: 22px;
+  }
+
+  .logo span {
+    font-size: 10px;
+  }
+}

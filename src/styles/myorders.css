@@ -1,0 +1,128 @@
+.myorders-container {
+  padding: 80px 10%;
+  background: #0f0f0f;
+  min-height: 100vh;
+  color: white;
+}
+
+.order-card {
+  background: #1a1a1a;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 12px;
+  border: 1px solid #222;
+}
+
+/* 🔥 STATUS BADGE */
+.status-badge {
+  margin-left: 10px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.pending {
+  background: #444;
+  color: white;
+}
+
+.preparing {
+  background: orange;
+  color: black;
+}
+
+.out-for-delivery {
+  background: #2196f3;
+  color: white;
+}
+
+.delivered {
+  background: green;
+  color: white;
+}
+/* 🔥 PROGRESS BAR */
+.progress-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  font-size: 12px;
+}
+
+.progress-step {
+  flex: 1;
+  text-align: center;
+  padding: 5px;
+  border-bottom: 3px solid #444;
+  color: #777;
+  transition: 0.3s;
+}
+
+.active-step {
+  border-bottom: 3px solid #D4AF37;
+  color: #D4AF37;
+  font-weight: bold;
+}
+
+/* ============================= */
+/* 🔥 RESPONSIVE – MY ORDERS */
+/* ============================= */
+
+/* Tablet */
+@media (max-width: 1024px) {
+
+  .myorders-container {
+    padding: 60px 6%;
+  }
+
+  .order-card {
+    padding: 18px;
+  }
+
+  .progress-container {
+    font-size: 11px;
+  }
+}
+
+
+/* Mobile */
+@media (max-width: 768px) {
+
+  .myorders-container {
+    padding: 40px 5%;
+  }
+
+  .order-card {
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  .order-card p {
+    font-size: 14px;
+  }
+
+  /* 🔥 Status badge smaller */
+  .status-badge {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+
+  /* 🔥 Progress steps stacked better */
+  .progress-container {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .progress-step {
+    text-align: left;
+    border-bottom: none;
+    border-left: 3px solid #444;
+    padding: 6px 10px;
+  }
+
+  .active-step {
+    border-left: 3px solid #D4AF37;
+  }
+
+}

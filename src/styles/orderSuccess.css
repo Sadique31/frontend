@@ -1,0 +1,20 @@
+.success-container {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.success-container h1 {
+  color: gold;
+}
+
+.success-container button {
+  padding: 10px 20px;
+  background: gold;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}

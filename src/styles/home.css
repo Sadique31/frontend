@@ -1,0 +1,486 @@
+.hero-section {
+  height: 90vh;
+  background: url("https://images.unsplash.com/photo-1600891964599-f61ba0e24092")
+    center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.hero-overlay {
+  position: relative;
+  z-index: 2;
+  padding: 50px 70px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  max-width: 650px;
+}
+
+.hero-title {
+  font-family: 'Cinzel', serif;
+  font-size: 64px;
+  color: #D4AF37;
+  margin-bottom: 20px;
+}
+
+.hero-subtitle {
+  font-size: 20px;
+  color: #f5e6c8;
+  margin-bottom: 30px;
+}
+
+.hero-btn {
+  background: linear-gradient(45deg, #D4AF37, #b8932f);
+  border: none;
+  padding: 14px 36px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.specials-section {
+  background: #0f0f0f;
+  padding: 80px 10%;
+  text-align: center;
+}
+
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 42px;
+  color: #D4AF37;
+  margin-bottom: 50px;
+}
+
+.specials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.special-card {
+  background: #1a1a1a;
+  padding: 30px;
+  border-radius: 12px;
+  transition: 0.3s ease;
+  border: 1px solid #222;
+}
+
+.special-card h3 {
+  color: #D4AF37;
+  margin-bottom: 10px;
+}
+
+.special-card p {
+  color: #ccc;
+  margin-bottom: 15px;
+}
+
+.special-card span {
+  font-weight: bold;
+  color: #f5e6c8;
+}
+
+.special-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+}
+.about-section {
+  background: linear-gradient(to right, #0f0f0f, #1a0000);
+  padding: 80px 12%;
+  text-align: center;
+}
+
+.about-content h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 40px;
+  color: #D4AF37;
+  margin-bottom: 30px;
+}
+
+.about-content p {
+  color: #ccc;
+  font-size: 18px;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.about-highlight {
+  margin-top: 30px;
+  font-size: 20px;
+  color: #f5e6c8;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+/* 🔥 MENU SECTION */
+.menu-section {
+  padding: 90px 12%;
+  background: #0c0c0c;
+  text-align: center;
+}
+
+.menu-title {
+  font-family: 'Cinzel', serif;
+  font-size: 42px;
+  color: #D4AF37;
+  margin-bottom: 60px;
+}
+
+/* GRID */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+}
+
+/* CARD */
+.menu-card {
+  background: linear-gradient(145deg, #1a0000, #0f0f0f);
+  padding: 40px 30px;
+  border-radius: 12px;
+  border: 1px solid #222;
+  transition: all 0.4s ease;
+  cursor: pointer;
+}
+
+.menu-card h3 {
+  color: #D4AF37;
+  font-size: 24px;
+  margin-bottom: 15px;
+  font-family: 'Cinzel', serif;
+}
+
+.menu-card p {
+  color: #bbb;
+  font-size: 15px;
+}
+
+/* HOVER EFFECT */
+.menu-card:hover {
+  transform: translateY(-8px);
+  border: 1px solid #D4AF37;
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+}
+/* WHY SECTION */
+.why-section {
+  padding: 80px 10%;
+  background: #0f0f0f;
+  text-align: center;
+}
+
+.section-heading {
+  font-family: 'Cinzel', serif;
+  font-size: 40px;
+  color: #D4AF37;
+  margin-bottom: 50px;
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.why-card {
+  background: #1a1a1a;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #222;
+  transition: 0.3s ease;
+}
+
+.why-card h3 {
+  color: #D4AF37;
+  margin-bottom: 15px;
+}
+
+.why-card p {
+  color: #ccc;
+}
+
+.why-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+}
+
+/* ========================= */
+/* CUSTOMER REVIEWS SECTION  */
+/* ========================= */
+
+.reviews-section {
+  padding: 80px 10%;
+  background: #0f0f0f;
+  text-align: center;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.review-card {
+  background: #1a1a1a;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #222;
+  transition: 0.3s ease;
+}
+
+.review-card p {
+  color: #ccc;
+  margin-bottom: 15px;
+}
+
+.review-card h4 {
+  color: #D4AF37;
+  margin-bottom: 8px;
+}
+
+.review-card span {
+  color: #D4AF37;
+}
+
+.review-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+}
+/* ========================= */
+/* CONTACT SECTION */
+/* ========================= */
+
+.contact-section {
+  padding: 80px 10%;
+  background: #111;
+  text-align: center;
+}
+
+.contact-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.contact-info {
+  flex: 1;
+  min-width: 280px;
+  text-align: left;
+}
+
+.contact-info h3 {
+  color: #D4AF37;
+  margin-top: 20px;
+}
+
+.contact-info p {
+  color: #ccc;
+  margin-top: 5px;
+}
+
+.map-placeholder {
+  flex: 1;
+  min-width: 280px;
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 40px;
+  border: 1px solid #222;
+  color: #aaa;
+}
+/* ========================= */
+/* FOOTER */
+/* ========================= */
+
+.footer {
+  background: #0b0b0b;
+  padding: 60px 10% 20px;
+  border-top: 1px solid #222;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 30px;
+}
+
+.footer-content h3,
+.footer-content h4 {
+  color: #D4AF37;
+  margin-bottom: 10px;
+}
+
+.footer-content p {
+  color: #aaa;
+  margin: 6px 0;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.footer-content p:hover {
+  color: #D4AF37;
+}
+
+.footer-bottom {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  padding-top: 20px;
+  border-top: 1px solid #222;
+}
+.footer-content p {
+  cursor: pointer;
+}
+
+/* ============================= */
+/* 🔥 RESPONSIVE POLISH – HOME */
+/* ============================= */
+
+/* -------- TABLET -------- */
+@media (max-width: 1024px) {
+
+  .hero-section {
+    height: 75vh;
+  }
+
+  .hero-overlay {
+    padding: 40px 40px;
+    max-width: 90%;
+  }
+
+  .hero-title {
+    font-size: 48px;
+  }
+
+  .section-title,
+  .menu-title,
+  .section-heading {
+    font-size: 34px;
+  }
+
+  .about-section,
+  .menu-section,
+  .why-section,
+  .reviews-section,
+  .contact-section {
+    padding: 70px 8%;
+  }
+}
+
+
+/* -------- MOBILE -------- */
+@media (max-width: 768px) {
+
+  /* Hero Section Fix */
+  .hero-section {
+    height: 70vh;
+  }
+
+  .hero-overlay {
+    padding: 30px 20px;
+    max-width: 95%;
+  }
+
+  .hero-title {
+    font-size: 34px;
+  }
+
+  .hero-subtitle {
+    font-size: 16px;
+  }
+
+  .hero-btn {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+
+  /* 🔥 Royal Specials heading ko niche slide */
+  .specials-section {
+    padding: 100px 6% 60px;  /* upar extra space */
+  }
+
+  .section-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+
+  /* Cards compact */
+  .special-card {
+    padding: 20px;
+  }
+
+  .special-card h3 {
+    font-size: 18px;
+  }
+
+  .special-card p {
+    font-size: 14px;
+  }
+
+  /* Menu Grid tighter */
+  .menu-section {
+    padding: 70px 6%;
+  }
+
+  .menu-card {
+    padding: 25px 20px;
+  }
+
+  .menu-card h3 {
+    font-size: 18px;
+  }
+
+  .menu-card p {
+    font-size: 13px;
+  }
+
+  /* Why Choose section compact */
+  .why-section {
+    padding: 70px 6%;
+  }
+
+  .why-card {
+    padding: 20px;
+  }
+
+  .why-card h3 {
+    font-size: 18px;
+  }
+
+  .why-card p {
+    font-size: 14px;
+  }
+
+  /* Reviews compact */
+  .review-card {
+    padding: 20px;
+  }
+
+  /* Contact stacked properly */
+  .contact-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .map-placeholder {
+    padding: 20px;
+  }
+
+  /* Footer stacked */
+  .footer-content {
+    flex-direction: column;
+    gap: 25px;
+  }
+
+}

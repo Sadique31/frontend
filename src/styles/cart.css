@@ -1,0 +1,220 @@
+.cart-container {
+  padding: 60px 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.cart-title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: gold;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1a1a1a;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qty-controls button {
+  background: gold;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cart-total {
+  text-align: right;
+  margin-top: 20px;
+  font-size: 20px;
+}
+
+.checkout-btn {
+  display: block;
+  margin-left: auto;
+  margin-top: 20px;
+  background: gold;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+.qty-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #111;
+  padding: 6px 12px;
+  border-radius: 30px;
+  border: 1px solid #333;
+}
+
+.qty-btn {
+  background: linear-gradient(45deg, #D4AF37, #b8932f);
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.qty-btn:hover {
+  transform: scale(1.1);
+}
+
+.qty-number {
+  color: #D4AF37;
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* ================================= */
+/* 🔥 CART RESPONSIVE POLISH */
+/* ================================= */
+
+/* Better spacing & alignment */
+.cart-item span:first-child {
+  flex: 1;
+  color: #fff;
+  font-size: 15px;
+}
+
+.cart-item span:last-child {
+  min-width: 70px;
+  text-align: right;
+  font-weight: bold;
+  color: #f5e6c8;
+}
+
+/* Improve checkout button */
+.cart-container button {
+  background: linear-gradient(45deg, #D4AF37, #b8932f);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.cart-container button:hover {
+  transform: scale(1.05);
+}
+
+/* ===================== */
+/* TABLET RESPONSIVE */
+/* ===================== */
+@media (max-width: 1024px) {
+
+  .cart-container {
+    padding: 50px 40px;
+  }
+
+  .cart-item {
+    padding: 14px;
+  }
+
+  .cart-total {
+    font-size: 18px;
+  }
+}
+
+/* ===================== */
+/* MOBILE RESPONSIVE */
+/* ===================== */
+@media (max-width: 768px) {
+
+  .cart-container {
+    padding: 40px 16px;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .qty-container {
+    align-self: flex-start;
+  }
+
+  .cart-item span:last-child {
+    align-self: flex-end;
+  }
+
+  .cart-total {
+    text-align: left;
+    font-size: 18px;
+  }
+
+  .cart-container button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ===================== */
+/* SMALL MOBILE */
+/* ===================== */
+@media (max-width: 480px) {
+
+  .cart-title {
+    font-size: 22px;
+  }
+
+  .cart-item span:first-child {
+    font-size: 14px;
+  }
+
+  .qty-btn {
+    width: 26px;
+    height: 26px;
+  }
+
+  .qty-number {
+    font-size: 14px;
+  }
+}
+/* ========================= */
+/* 🔥 QTY UI PERFECT ALIGN */
+/* ========================= */
+
+.qty-container {
+  display: flex;
+  align-items: center;      /* vertical center */
+  justify-content: center;  /* horizontal center */
+  gap: 14px;
+  background: #111;
+  padding: 8px 14px;
+  border-radius: 40px;
+  border: 1px solid #333;
+  min-width: 110px;
+}
+
+.qty-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+}
+
+.qty-number {
+  font-size: 16px;
+  font-weight: bold;
+}
