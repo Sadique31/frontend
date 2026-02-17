@@ -11,28 +11,37 @@ function Admin({ setCurrentPage }) {
   const [shopOpen, setShopOpen] = useState(true);
 
   // 🔐 Admin Guard + Fetch Orders
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+ useEffect(() => {
+  const token = localStorage.getItem("token");
 
-    if (!token) {
-      setCurrentPage("login");
+  if (!token) {
+    setCurrentPage("login");
+    return;
+  }
+
+  try {
+    const decoded = JSON.parse(atob(token.split(".")[1]));
+
+    if (decoded.role !== "admin") {
+      setCurrentPage("home");
       return;
     }
 
-    try {
-      const decoded = JSON.parse(atob(token.split(".")[1]));
+    fetchOrders();
+    fetchShopStatus();
 
-      if (decoded.role !== "admin") {
-        setCurrentPage("home");
-        return;
-      }
-
+    // ✅ AUTO REFRESH EVERY 5 SECONDS
+    const interval = setInterval(() => {
       fetchOrders();
-      fetchShopStatus();
-    } catch (error) {
-      setCurrentPage("login");
-    }
-  }, []);
+    }, 5000);
+
+    return () => clearInterval(interval);
+
+  } catch (error) {
+    setCurrentPage("login");
+  }
+}, []);
+
 
   const fetchOrders = async () => {
     try {
