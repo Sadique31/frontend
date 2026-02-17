@@ -1,16 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "../styles/admin.css";
 import { io } from "socket.io-client";
-import { useRef } from "react";
 function Admin({ setCurrentPage }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const audioRef = useRef(null);
 
   // ===============================
   // 🔥 SHOP STATUS STATE (ADDED)
   // ===============================
   const [shopOpen, setShopOpen] = useState(true);
+  const audioRef = useRef(null);
   // 🔐 Admin Guard + Fetch Orders. 
 useEffect(() => {
   const token = localStorage.getItem("token");
@@ -38,16 +37,22 @@ useEffect(() => {
       console.log("Connected to socket:", socket.id);
     });
 
-    socket.on("newOrder", (order) => {
+socket.on("newOrder", (order) => {
   setOrders((prev) => [order, ...prev]);
 
   if (audioRef.current) {
     audioRef.current.currentTime = 0;
-    audioRef.current.play().catch((err) => {
-      console.log("Audio blocked:", err);
-    });
+
+    const playPromise = audioRef.current.play();
+
+    if (playPromise !== undefined) {
+      playPromise.catch((err) => {
+        console.log("Autoplay blocked:", err);
+      });
+    }
   }
 });
+
 
 
     return () => socket.disconnect();
