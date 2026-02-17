@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import "../styles/admin.css";
 import { io } from "socket.io-client";
 function Admin({ setCurrentPage }) {
@@ -9,8 +9,8 @@ function Admin({ setCurrentPage }) {
   // 🔥 SHOP STATUS STATE (ADDED)
   // ===============================
   const [shopOpen, setShopOpen] = useState(true);
-  const audioRef = useRef(null);
-  // 🔐 Admin Guard + Fetch Orders. 
+
+  // 🔐 Admin Guard + Fetch Orders
 useEffect(() => {
   const token = localStorage.getItem("token");
 
@@ -29,7 +29,7 @@ useEffect(() => {
 
     fetchOrders();
     fetchShopStatus();
-    audioRef.current = new Audio("/notification.mp3");
+
     // 🔥 SOCKET CONNECTION
    const socket = io("https://arabian-cafe-backend.onrender.com");
  
@@ -37,23 +37,10 @@ useEffect(() => {
       console.log("Connected to socket:", socket.id);
     });
 
-socket.on("newOrder", (order) => {
-  setOrders((prev) => [order, ...prev]);
-
-  if (audioRef.current) {
-    audioRef.current.currentTime = 0;
-
-    const playPromise = audioRef.current.play();
-
-    if (playPromise !== undefined) {
-      playPromise.catch((err) => {
-        console.log("Autoplay blocked:", err);
-      });
-    }
-  }
-});
-
-
+    socket.on("newOrder", (order) => {
+      console.log("New Order Received:", order);
+      setOrders((prev) => [order, ...prev]);
+    });
 
     return () => socket.disconnect();
 
