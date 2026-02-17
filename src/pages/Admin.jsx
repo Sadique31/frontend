@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import "../styles/admin.css";
-
+import { io } from "socket.io-client";
+import { useRef } from "react";
 function Admin({ setCurrentPage }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const audioRef = useRef(null);
 
   // ===============================
   // 🔥 SHOP STATUS STATE (ADDED)
   // ===============================
   const [shopOpen, setShopOpen] = useState(true);
-
-  // 🔐 Admin Guard + Fetch Orders
- useEffect(() => {
+  // 🔐 Admin Guard + Fetch Orders. 
+useEffect(() => {
   const token = localStorage.getItem("token");
 
   if (!token) {
@@ -29,13 +30,27 @@ function Admin({ setCurrentPage }) {
 
     fetchOrders();
     fetchShopStatus();
+    audioRef.current = new Audio("/notification.mp3");
+    // 🔥 SOCKET CONNECTION
+   const socket = io("https://arabian-cafe-backend.onrender.com");
+ 
+    socket.on("connect", () => {
+      console.log("Connected to socket:", socket.id);
+    });
 
-    // ✅ AUTO REFRESH EVERY 5 SECONDS
-    const interval = setInterval(() => {
-      fetchOrders();
-    }, 5000);
+    socket.on("newOrder", (order) => {
+  setOrders((prev) => [order, ...prev]);
 
-    return () => clearInterval(interval);
+  if (audioRef.current) {
+    audioRef.current.currentTime = 0;
+    audioRef.current.play().catch((err) => {
+      console.log("Audio blocked:", err);
+    });
+  }
+});
+
+
+    return () => socket.disconnect();
 
   } catch (error) {
     setCurrentPage("login");
