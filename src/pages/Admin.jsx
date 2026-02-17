@@ -1,70 +1,72 @@
 import { useEffect, useState } from "react";
 import "../styles/admin.css";
 import { io } from "socket.io-client";
+
 function Admin({ setCurrentPage }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // ===============================
-  // 🔥 SHOP STATUS STATE (ADDED)
-  // ===============================
   const [shopOpen, setShopOpen] = useState(true);
 
-  // 🔐 Admin Guard + Fetch Orders
-useEffect(() => {
-  const token = localStorage.getItem("token");
+  // 🔊 SOUND FUNCTION
+  const playSound = () => {
+    const audio = document.getElementById("orderSound");
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    }
+  };
 
-  if (!token) {
-    setCurrentPage("login");
-    return;
-  }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  try {
-    const decoded = JSON.parse(atob(token.split(".")[1]));
-
-    if (decoded.role !== "admin") {
-      setCurrentPage("home");
+    if (!token) {
+      setCurrentPage("login");
       return;
     }
 
-    fetchOrders();
-    fetchShopStatus();
+    try {
+      const decoded = JSON.parse(atob(token.split(".")[1]));
 
-    // 🔥 SOCKET CONNECTION
-   const socket = io("https://arabian-cafe-backend.onrender.com");
- 
-    socket.on("connect", () => {
-      console.log("Connected to socket:", socket.id);
-    });
+      if (decoded.role !== "admin") {
+        setCurrentPage("home");
+        return;
+      }
 
-    socket.on("newOrder", (order) => {
-      console.log("New Order Received:", order);
-      setOrders((prev) => [order, ...prev]);
-    });
+      fetchOrders();
+      fetchShopStatus();
 
-    return () => socket.disconnect();
+      const socket = io("https://arabian-cafe-backend.onrender.com", {
+        transports: ["websocket"],
+      });
 
-  } catch (error) {
-    setCurrentPage("login");
-  }
-}, []);
+      socket.on("connect", () => {
+        console.log("Socket Connected:", socket.id);
+      });
 
+      socket.on("newOrder", (order) => {
+        setOrders((prev) => [order, ...prev]);
+        playSound(); // 🔊 SOUND HERE
+      });
+
+      return () => socket.disconnect();
+
+    } catch (error) {
+      setCurrentPage("login");
+    }
+  }, []);
 
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("https://arabian-cafe-backend.onrender.com/api/orders", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        setOrders([]);
-        setLoading(false);
-        return;
-      }
+      const response = await fetch(
+        "https://arabian-cafe-backend.onrender.com/api/orders",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = await response.json();
       setOrders(Array.isArray(data) ? data : []);
@@ -78,7 +80,9 @@ useEffect(() => {
 
   const fetchShopStatus = async () => {
     try {
-      const response = await fetch("https://arabian-cafe-backend.onrender.com/api/shop/status");
+      const response = await fetch(
+        "https://arabian-cafe-backend.onrender.com/api/shop/status"
+      );
       const data = await response.json();
       setShopOpen(data.isOpen);
     } catch (error) {
@@ -90,14 +94,17 @@ useEffect(() => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("https://arabian-cafe-backend.onrender.com/api/shop/status", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ isOpen: !shopOpen }),
-      });
+      const response = await fetch(
+        "https://arabian-cafe-backend.onrender.com/api/shop/status",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ isOpen: !shopOpen }),
+        }
+      );
 
       const data = await response.json();
       setShopOpen(data.isOpen);
@@ -105,20 +112,23 @@ useEffect(() => {
       console.error("Error updating shop status:", error);
     }
   };
+
   const updateStatus = async (id, newStatus) => {
     try {
       const token = localStorage.getItem("token");
 
-      await fetch(`https://arabian-cafe-backend.onrender.com/api/orders/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      await fetch(
+        `https://arabian-cafe-backend.onrender.com/api/orders/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
 
-      // 🔥 NEW: WhatsApp Auto Message when Out for Delivery
       if (newStatus === "Out for Delivery") {
         const order = orders.find((o) => o._id === id);
 
@@ -141,16 +151,14 @@ ${mapLink}
 
 🛒 Items:
 ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
-        `;
+          `;
 
           const encodedMessage = encodeURIComponent(message);
-
-          // 👉 Replace with Delivery Boy Number (with country code)
           const deliveryNumber = "917728885840";
 
           window.open(
             `https://wa.me/${deliveryNumber}?text=${encodedMessage}`,
-            "_blank",
+            "_blank"
           );
         }
       }
@@ -162,10 +170,9 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
   };
 
   const totalOrders = orders.length;
-
   const totalRevenue = orders.reduce(
     (sum, order) => sum + order.totalAmount,
-    0,
+    0
   );
 
   const today = new Date().toDateString();
@@ -175,7 +182,7 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
     .reduce((sum, order) => sum + order.totalAmount, 0);
 
   const deliveredCount = orders.filter(
-    (order) => order.status === "Delivered",
+    (order) => order.status === "Delivered"
   ).length;
 
   return (
@@ -183,7 +190,6 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
       <div className="admin-header">
         <h2>Admin Dashboard</h2>
 
-        {/* 🔥 HISTORY BUTTON (ONLY THIS ADDED) */}
         <button
           className="history-btn"
           onClick={() => setCurrentPage("history")}
@@ -202,7 +208,6 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
         </button>
       </div>
 
-      {/* 🔥 COMPACT SHOP CONTROL BAR */}
       <div className="shop-control-bar">
         <div className="shop-status-info">
           <span className="shop-text">Shop Status:</span>
@@ -244,28 +249,23 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
       {loading ? (
         <p>Loading orders...</p>
       ) : orders.filter(
-          (order) => new Date(order.createdAt).toDateString() === today,
+          (order) => new Date(order.createdAt).toDateString() === today
         ).length === 0 ? (
         <p>No orders today</p>
       ) : (
         <div className="orders-grid">
           {orders
             .filter(
-              (order) => new Date(order.createdAt).toDateString() === today,
+              (order) => new Date(order.createdAt).toDateString() === today
             )
             .map((order) => (
               <div key={order._id} className="order-card">
                 <div className="order-top">
-                  <span className="order-id">#{order._id.slice(-6)}</span>
+                  <span className="order-id">
+                    #{order._id.slice(-6)}
+                  </span>
                   <span className="order-time">
-                    {new Date(order.createdAt).toLocaleString("en-IN", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })}
+                    {new Date(order.createdAt).toLocaleString("en-IN")}
                   </span>
                 </div>
 
@@ -273,40 +273,34 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
                   <h3>{order.customerName}</h3>
                   <p>📞 {order.phone}</p>
                   <p>📍 {order.address}</p>
-                  {/* 🔥 DELIVERY INFO (SAFE ADDITION) */}
-                  {order.distance !== undefined && (
-                    <div className="delivery-info">
-                      <p>📏 Distance: {order.distance.toFixed(2)} km</p>
-                      <p>🚚 Delivery Charge: ₹{order.deliveryCharge || 0}</p>
-                    </div>
-                  )}
                 </div>
 
                 <div className="order-payment">
-                  <span className="order-total">₹{order.totalAmount}</span>
+                  <span className="order-total">
+                    ₹{order.totalAmount}
+                  </span>
                   <span className="payment-status">
                     {order.paymentStatus || "Pending"}
                   </span>
                 </div>
 
                 <div className="order-status-section">
-                  <label>Status:</label>
                   <select
                     value={order.status || "Pending"}
-                    onChange={(e) => updateStatus(order._id, e.target.value)}
-                    className="status-dropdown"
+                    onChange={(e) =>
+                      updateStatus(order._id, e.target.value)
+                    }
                   >
-                    <option value="Pending">🟡 Pending</option>
-                    <option value="Preparing">🔵 Preparing</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Preparing">Preparing</option>
                     <option value="Out for Delivery">
-                      🟣 Out for Delivery
+                      Out for Delivery
                     </option>
-                    <option value="Delivered">🟢 Delivered</option>
+                    <option value="Delivered">Delivered</option>
                   </select>
                 </div>
 
                 <div className="order-items">
-                  <strong>Items:</strong>
                   {order.items.map((item, index) => (
                     <div key={index}>
                       • {item.name} × {item.quantity}
@@ -317,6 +311,13 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
             ))}
         </div>
       )}
+
+      {/* 🔊 Hidden Audio Element */}
+      <audio
+        id="orderSound"
+        src="/notification.mp3"
+        preload="auto"
+      ></audio>
     </div>
   );
 }
