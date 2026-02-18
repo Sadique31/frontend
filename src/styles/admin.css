@@ -188,10 +188,52 @@
 /* ===============================
    🔥 STATUS COLORS
 ================================= */
-.status-pending { color: orange; }
-.status-preparing { color: #00aaff; }
-.status-out { color: purple; }
-.status-delivered { color: #00ff88; }
+/* ===============================
+   🔥 PROFESSIONAL STATUS STYLE
+================================= */
+
+.status-select {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  color: white;
+  cursor: pointer;
+  transition: 0.25s ease;
+  min-width: 170px;
+}
+
+.status-select:focus {
+  outline: none;
+  border-color: #D4AF37;
+  box-shadow: 0 0 8px rgba(212,175,55,0.3);
+}
+
+/* Pending */
+.status-pending {
+  border-left: 4px solid #ff9800;
+  color: #ffb74d;
+}
+
+/* Preparing */
+.status-preparing {
+  border-left: 4px solid #00bcd4;
+  color: #4dd0e1;
+}
+
+/* Out for Delivery */
+.status-out {
+  border-left: 4px solid #9c27b0;
+  color: #ce93d8;
+}
+
+/* Delivered */
+.status-delivered {
+  border-left: 4px solid #00e676;
+  color: #69f0ae;
+}
 
 
 /* ===============================
