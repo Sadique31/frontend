@@ -44,13 +44,11 @@ function Admin({ setCurrentPage }) {
       });
 
       socket.on("newOrder", () => {
-  fetchOrders();
-  playSound();
-});
-
+        fetchOrders();
+        playSound();
+      });
 
       return () => socket.disconnect();
-
     } catch (error) {
       setCurrentPage("login");
     }
@@ -66,7 +64,7 @@ function Admin({ setCurrentPage }) {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
@@ -82,7 +80,7 @@ function Admin({ setCurrentPage }) {
   const fetchShopStatus = async () => {
     try {
       const response = await fetch(
-        "https://arabian-cafe-backend.onrender.com/api/shop/status"
+        "https://arabian-cafe-backend.onrender.com/api/shop/status",
       );
       const data = await response.json();
       setShopOpen(data.isOpen);
@@ -104,7 +102,7 @@ function Admin({ setCurrentPage }) {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ isOpen: !shopOpen }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -127,7 +125,7 @@ function Admin({ setCurrentPage }) {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ status: newStatus }),
-        }
+        },
       );
 
       if (newStatus === "Out for Delivery") {
@@ -159,7 +157,7 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
 
           window.open(
             `https://wa.me/${deliveryNumber}?text=${encodedMessage}`,
-            "_blank"
+            "_blank",
           );
         }
       }
@@ -173,7 +171,7 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
   const totalOrders = orders.length;
   const totalRevenue = orders.reduce(
     (sum, order) => sum + order.totalAmount,
-    0
+    0,
   );
 
   const today = new Date().toDateString();
@@ -183,7 +181,7 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
     .reduce((sum, order) => sum + order.totalAmount, 0);
 
   const deliveredCount = orders.filter(
-    (order) => order.status === "Delivered"
+    (order) => order.status === "Delivered",
   ).length;
 
   return (
@@ -250,21 +248,19 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
       {loading ? (
         <p>Loading orders...</p>
       ) : orders.filter(
-          (order) => new Date(order.createdAt).toDateString() === today
+          (order) => new Date(order.createdAt).toDateString() === today,
         ).length === 0 ? (
         <p>No orders today</p>
       ) : (
         <div className="orders-grid">
           {orders
             .filter(
-              (order) => new Date(order.createdAt).toDateString() === today
+              (order) => new Date(order.createdAt).toDateString() === today,
             )
             .map((order) => (
               <div key={order._id} className="order-card">
                 <div className="order-top">
-                  <span className="order-id">
-                    #{order._id.slice(-6)}
-                  </span>
+                  <span className="order-id">#{order._id.slice(-6)}</span>
                   <span className="order-time">
                     {new Date(order.createdAt).toLocaleString("en-IN")}
                   </span>
@@ -277,9 +273,7 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
                 </div>
 
                 <div className="order-payment">
-                  <span className="order-total">
-                    ₹{order.totalAmount}
-                  </span>
+                  <span className="order-total">₹{order.totalAmount}</span>
                   <span className="payment-status">
                     {order.paymentStatus || "Pending"}
                   </span>
@@ -287,16 +281,21 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
 
                 <div className="order-status-section">
                   <select
+                    className={`status-select ${
+                      order.status === "Preparing"
+                        ? "status-preparing"
+                        : order.status === "Out for Delivery"
+                          ? "status-out"
+                          : order.status === "Delivered"
+                            ? "status-delivered"
+                            : "status-pending"
+                    }`}
                     value={order.status || "Pending"}
-                    onChange={(e) =>
-                      updateStatus(order._id, e.target.value)
-                    }
+                    onChange={(e) => updateStatus(order._id, e.target.value)}
                   >
                     <option value="Pending">Pending</option>
                     <option value="Preparing">Preparing</option>
-                    <option value="Out for Delivery">
-                      Out for Delivery
-                    </option>
+                    <option value="Out for Delivery">Out for Delivery</option>
                     <option value="Delivered">Delivered</option>
                   </select>
                 </div>
@@ -314,11 +313,7 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
       )}
 
       {/* 🔊 Hidden Audio Element */}
-      <audio
-        id="orderSound"
-        src="/notification.mp3"
-        preload="auto"
-      ></audio>
+      <audio id="orderSound" src="/notification.mp3" preload="auto"></audio>
     </div>
   );
 }
