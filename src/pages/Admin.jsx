@@ -43,10 +43,11 @@ function Admin({ setCurrentPage }) {
         console.log("Socket Connected:", socket.id);
       });
 
-      socket.on("newOrder", (order) => {
-        setOrders((prev) => [order, ...prev]);
-        playSound(); // 🔊 SOUND HERE
-      });
+      socket.on("newOrder", () => {
+  fetchOrders();
+  playSound();
+});
+
 
       return () => socket.disconnect();
 
