@@ -123,95 +123,89 @@ function Checkout({ cart, setCurrentPage, setCart }) {
     );
   };
 
-  const handlePayment = async () => {
-    try {
-      const token = localStorage.getItem("token");
+const handlePayment = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) { alert("Please login first"); return; }
 
-      if (!token) {
-        alert("Please login first");
-        return;
-      }
-
-      const paymentResponse = await fetch(
-        "https://arabian-cafe-backend.onrender.com/api/payment/create-order",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ amount: total }),
-        }
-      );
-
-      const paymentData = await paymentResponse.json();
-
-      if (!paymentResponse.ok) {
-        throw new Error("Payment creation failed");
-      }
-
-      const options = {
-        key: "rzp_test_SFixe0pyqXAmda",
-        amount: paymentData.amount,
-        currency: paymentData.currency,
-        name: "Arabian Cafe",
-        description: "Food Order Payment",
-        order_id: paymentData.id,
-
-        handler: async function (response) {
-          const verifyResponse = await fetch(
-            "https://arabian-cafe-backend.onrender.com/api/payment/verify-payment",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                orderDetails: {
-                  items: cart,
-                  totalAmount: total,
-                  customerName: name,
-                  phone: phone,
-                  address: address,
-                  userLat: userLat,
-                  userLng: userLng,
-                  distance: distance,
-                  deliveryCharge: deliveryCharge,
-                  userId: JSON.parse(atob(token.split(".")[1])).id,
-                  paymentId: response.razorpay_payment_id,
-                  razorpayOrderId: response.razorpay_order_id,
-                  paymentStatus: "Paid",
-                },
-              }),
-            }
-          );
-
-          if (!verifyResponse.ok) {
-            alert("Payment verification failed");
-            return;
-          }
-
-          setCart([]);
-          setCurrentPage("success");
-        },
-
-        theme: {
-          color: "#D4AF37",
-        },
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (error) {
-      console.error("Payment Error:", error);
-      alert("Payment failed");
+    if (!name || !phone || !address) {
+      alert("Please fill all details and select location");
+      return;
     }
-  };
 
+    // ✅ Step 1: Key fetch karo backend se
+    const configRes = await fetch("https://arabian-cafe-backend.onrender.com/api/payment/config", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const { key } = await configRes.json();
+
+    // ✅ Step 2: Items bhejo, amount nahi
+    const paymentResponse = await fetch(
+      "https://arabian-cafe-backend.onrender.com/api/payment/create-order",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ 
+          items: cart.map(item => ({ _id: item._id, quantity: item.quantity })),
+          deliveryCharge: deliveryCharge 
+        }),
+      }
+    );
+
+    const paymentData = await paymentResponse.json();
+    if (!paymentResponse.ok) throw new Error(paymentData.message || "Payment creation failed");
+
+    const options = {
+      key: key,  // ✅ Backend se aaya
+      amount: paymentData.amount,
+      currency: paymentData.currency,
+      name: "Arabian Cafe",
+      description: "Food Order Payment",
+      order_id: paymentData.id,
+
+      handler: async function (response) {
+        const verifyResponse = await fetch(
+          "https://arabian-cafe-backend.onrender.com/api/payment/verify-payment",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              orderDetails: {
+                items: cart,
+                totalAmount: paymentData.amount / 100, // Backend verified amount
+                customerName: name,
+                phone: phone,
+                address: address,
+                customerLocation: userLat ? { lat: userLat, lng: userLng } : null,
+                distance: distance,
+                deliveryCharge: deliveryCharge,
+                userId: JSON.parse(atob(token.split(".")[1])).id,
+                paymentId: response.razorpay_payment_id,
+                razorpayOrderId: response.razorpay_order_id,
+                paymentStatus: "Paid",
+              },
+            }),
+          }
+        );
+
+        if (!verifyResponse.ok) { alert("Payment verification failed"); return; }
+        setCart([]);
+        setCurrentPage("success");
+      },
+      theme: { color: "#D4AF37" },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+
+  } catch (error) {
+    console.error("Payment Error:", error);
+    alert(error.message || "Payment failed");
+  }
+};
   return (
     <div className="checkout-container">
       <h2 className="checkout-title">Checkout</h2>
