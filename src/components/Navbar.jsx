@@ -62,7 +62,6 @@ function Navbar({ cartCount, setCurrentPage }) {
         <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
 
           {/* ✅ Close button — sirf mobile pe dikhega */}
-          <li className="close-btn" onClick={() => setMenuOpen(false)}>✕</li>
 
           <li onClick={() => handleNavigation("home")}>Home</li>
           <li onClick={() => handleNavigation("menu")}>Menu</li>
