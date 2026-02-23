@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
@@ -9,6 +9,8 @@ import Login from "./pages/Login";
 import MyOrders from "./pages/MyOrders";
 import Signup from "./pages/Signup";
 import Menu from "./pages/Menu";
+import { useEffect } from "react";
+import { useRef } from "react";
 import Inventory from "./pages/Inventory";
 import OrderHistory from "./pages/OrderHistory";
 
@@ -29,12 +31,7 @@ function App() {
     }
   }, [currentPage]);
 
-  // ✅ UPDATED: localStorage bhi update hoga page change pe
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    localStorage.setItem("currentPage", page);
-  };
-
+  // 🔥 ADD THIS FUNCTION
   const addToCart = (item) => {
     const existingItem = cart.find((i) => i.name === item.name);
 
@@ -51,44 +48,45 @@ function App() {
 
   return (
     <div>
-      {/* ✅ UPDATED: handlePageChange pass kiya */}
-      <Navbar cartCount={cart.length} setCurrentPage={handlePageChange} />
+      <Navbar cartCount={cart.length} setCurrentPage={setCurrentPage} />
 
       {currentPage === "home" && (
-        <Home cart={cart} setCart={setCart} setCurrentPage={handlePageChange} />
+        <Home cart={cart} setCart={setCart} setCurrentPage={setCurrentPage} />
       )}
 
       {currentPage === "cart" && (
-        <Cart cart={cart} setCart={setCart} setCurrentPage={handlePageChange} />
+        <Cart cart={cart} setCart={setCart} setCurrentPage={setCurrentPage} />
       )}
 
       {currentPage === "checkout" && (
         <Checkout
           cart={cart}
-          setCurrentPage={handlePageChange}
+          setCurrentPage={setCurrentPage}
           setCart={setCart}
         />
       )}
 
       {currentPage === "success" && <OrderSuccess />}
 
-      {currentPage === "admin" && <Admin setCurrentPage={handlePageChange} />}
+      {currentPage === "admin" && <Admin setCurrentPage={setCurrentPage} />}
 
-      {currentPage === "login" && <Login setCurrentPage={handlePageChange} />}
+      {currentPage === "login" && <Login setCurrentPage={setCurrentPage} />}
 
       {currentPage === "myorders" && <MyOrders />}
 
-      {currentPage === "signup" && <Signup setCurrentPage={handlePageChange} />}
+      {currentPage === "signup" && <Signup setCurrentPage={setCurrentPage} />}
 
+      {/* 🔥 FIXED MENU */}
       {currentPage === "menu" && <Menu addToCart={addToCart} />}
-
       {currentPage === "inventory" && (
-        <Inventory setCurrentPage={handlePageChange} />
+        <Inventory setCurrentPage={setCurrentPage} />
       )}
-
       {currentPage === "history" && (
-        <OrderHistory setCurrentPage={handlePageChange} />
-      )}
+  <OrderHistory setCurrentPage={setCurrentPage} />
+)}
+
+
+
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "../styles/navbar.css";
 
 function Navbar({ cartCount, setCurrentPage }) {
@@ -21,81 +21,48 @@ function Navbar({ cartCount, setCurrentPage }) {
     }
   }
 
-  // ✅ Body scroll band karo jab menu khula ho
-  useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-
-    // Cleanup
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [menuOpen]);
-
+  // ✅ NEW SAFE FUNCTION
   const handleNavigation = (page) => {
     setCurrentPage(page);
-    setMenuOpen(false);
+    setMenuOpen(false); // 🔥 close hamburger after click
   };
 
   return (
-    <>
-      <nav className="navbar">
-        <div className="logo" onClick={() => handleNavigation("home")}>
-          Arabian Cafe
-          <span>The Golden Crisp</span>
-        </div>
+    <nav className="navbar">
+      <div className="logo" onClick={() => handleNavigation("home")}>
+        Arabian Cafe
+        <span>The Golden Crisp</span>
+      </div>
 
-        {/* ✅ Hamburger icon — ☰ se × banta hai */}
-        <div
-          className={`hamburger ${menuOpen ? "open" : ""}`}
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+      <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+        ☰
+      </div>
 
-        {/* ✅ Nav links */}
-        <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
+      <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
+        <li onClick={() => handleNavigation("home")}>Home</li>
+        <li onClick={() => handleNavigation("menu")}>Menu</li>
+        <li onClick={() => handleNavigation("cart")}>
+          Cart ({cartCount})
+        </li>
 
-          {/* ✅ Close button — sirf mobile pe dikhega */}
-
-          <li onClick={() => handleNavigation("home")}>Home</li>
-          <li onClick={() => handleNavigation("menu")}>Menu</li>
-          <li onClick={() => handleNavigation("cart")}>
-            Cart ({cartCount})
+        {isLoggedIn && (
+          <li onClick={() => handleNavigation("myorders")}>
+            My Orders
           </li>
+        )}
 
-          {isLoggedIn && (
-            <li onClick={() => handleNavigation("myorders")}>
-              My Orders
+        {isAdmin && (
+          <>
+            <li onClick={() => handleNavigation("admin")}>
+              Admin
             </li>
-          )}
-
-          {isAdmin && (
-            <>
-              <li onClick={() => handleNavigation("admin")}>
-                Admin
-              </li>
-              <li onClick={() => handleNavigation("inventory")}>
-                Inventory
-              </li>
-            </>
-          )}
-        </ul>
-      </nav>
-
-      {/* ✅ Overlay — menu ke peeche dark background */}
-      {menuOpen && (
-        <div
-          className="nav-overlay"
-          onClick={() => setMenuOpen(false)}
-        />
-      )}
-    </>
+            <li onClick={() => handleNavigation("inventory")}>
+              Inventory
+            </li>
+          </>
+        )}
+      </ul>
+    </nav>
   );
 }
 
