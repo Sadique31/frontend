@@ -23,6 +23,7 @@ function Login({ setCurrentPage }) {
 
       if (response.ok) {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
         localStorage.setItem("currentPage", "admin");
         window.location.reload();
       } else {

@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import "../styles/admin.css";
 import { io } from "socket.io-client";
 
+// ✅ CHANGE 1: apiFetch import kiya — ye auto token refresh karta hai
+import { apiFetch } from "../utils/api";
+
 function Admin({ setCurrentPage }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [shopOpen, setShopOpen] = useState(true);
 
-  // 🔊 SOUND FUNCTION
+  // 🔊 SOUND FUNCTION — koi change nahi
   const playSound = () => {
     const audio = document.getElementById("orderSound");
     if (audio) {
@@ -16,6 +19,7 @@ function Admin({ setCurrentPage }) {
     }
   };
 
+  // koi change nahi
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -56,17 +60,12 @@ function Admin({ setCurrentPage }) {
 
   const fetchOrders = async () => {
     try {
-      const token = localStorage.getItem("token");
+      // ✅ CHANGE 2: fetch → apiFetch
+      // Pehle: const response = await fetch("https://arabian-cafe-backend.onrender.com/api/orders", { headers: { Authorization: `Bearer ${token}` } });
+      // Ab: apiFetch automatically token handle karta hai, expire ho toh refresh karta hai
+      const response = await apiFetch("/api/orders");
 
-      const response = await fetch(
-        "https://arabian-cafe-backend.onrender.com/api/orders",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
+      if (!response) return; // token expire aur refresh bhi fail — auto logout ho gaya
       const data = await response.json();
       setOrders(Array.isArray(data) ? data : []);
       setLoading(false);
@@ -79,6 +78,7 @@ function Admin({ setCurrentPage }) {
 
   const fetchShopStatus = async () => {
     try {
+      // koi change nahi — ye public route hai, token ki zaroorat nahi
       const response = await fetch(
         "https://arabian-cafe-backend.onrender.com/api/shop/status",
       );
@@ -91,20 +91,15 @@ function Admin({ setCurrentPage }) {
 
   const toggleShopStatus = async () => {
     try {
-      const token = localStorage.getItem("token");
+      // ✅ CHANGE 3: fetch → apiFetch
+      // Pehle: await fetch("...api/shop/status", { method: "PUT", headers: { Authorization... }, body: ... })
+      // Ab: apiFetch automatically token aur Content-Type handle karta hai
+      const response = await apiFetch("/api/shop/status", {
+        method: "PUT",
+        body: JSON.stringify({ isOpen: !shopOpen }),
+      });
 
-      const response = await fetch(
-        "https://arabian-cafe-backend.onrender.com/api/shop/status",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ isOpen: !shopOpen }),
-        },
-      );
-
+      if (!response) return; // token expire aur refresh bhi fail — auto logout ho gaya
       const data = await response.json();
       setShopOpen(data.isOpen);
     } catch (error) {
@@ -114,20 +109,15 @@ function Admin({ setCurrentPage }) {
 
   const updateStatus = async (id, newStatus) => {
     try {
-      const token = localStorage.getItem("token");
+      // ✅ CHANGE 4: fetch → apiFetch
+      // Pehle: await fetch(`...api/orders/${id}`, { method: "PUT", headers: { Authorization... }, body: ... })
+      // Ab: apiFetch automatically token aur Content-Type handle karta hai
+      await apiFetch(`/api/orders/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({ status: newStatus }),
+      });
 
-      await fetch(
-        `https://arabian-cafe-backend.onrender.com/api/orders/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ status: newStatus }),
-        },
-      );
-
+      // WhatsApp delivery message — koi change nahi
       if (newStatus === "Out for Delivery") {
         const order = orders.find((o) => o._id === id);
 
@@ -168,6 +158,7 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
     }
   };
 
+  // Baaki sab koi change nahi — same as before
   const totalOrders = orders.length;
   const totalRevenue = orders.reduce(
     (sum, order) => sum + order.totalAmount,
@@ -200,6 +191,7 @@ ${order.items.map((item) => `• ${item.name} x ${item.quantity}`).join("\n")}
           className="logout-btn"
           onClick={() => {
             localStorage.removeItem("token");
+            localStorage.removeItem("refreshToken"); // ✅ Logout pe refreshToken bhi remove
             window.location.reload();
           }}
         >
