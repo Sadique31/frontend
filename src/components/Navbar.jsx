@@ -21,10 +21,9 @@ function Navbar({ cartCount, setCurrentPage }) {
     }
   }
 
-  // ✅ NEW SAFE FUNCTION
   const handleNavigation = (page) => {
     setCurrentPage(page);
-    setMenuOpen(false); // 🔥 close hamburger after click
+    setMenuOpen(false);
   };
 
   return (
@@ -34,8 +33,9 @@ function Navbar({ cartCount, setCurrentPage }) {
         <span>The Golden Crisp</span>
       </div>
 
+      {/* ✅ SIRF YE CHANGE: ☰ se ✕ banta hai, ✕ click karne pe menu band */}
       <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-        ☰
+        {menuOpen ? "✕" : "☰"}
       </div>
 
       <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
